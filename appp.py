@@ -32,7 +32,12 @@ credentials_dict = {
 }
 
 
-os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = json.dumps(credentials_dict)
+# Write credentials to a temporary file
+with tempfile.NamedTemporaryFile(mode="w+", delete=False, suffix=".json") as temp_file:
+    json.dump(credentials_dict, temp_file)
+    temp_file_path = temp_file.name
+
+os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = temp_file_path
 
 
 
