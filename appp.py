@@ -13,7 +13,29 @@ import google.generativeai as genai
 
 # --- Configuration & Clients ---
 genai.configure(api_key=st.secrets["GOOGLE_API_KEY"])
-os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "project-alpha-456519-c49943658d77.json"
+# os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "project-alpha-456519-c49943658d77.json"
+
+google_credentials = st.secrets["google_cloud"]
+
+credentials_dict = {
+    "type": "service_account",
+    "project_id": google_credentials["project_id"],
+    "private_key_id": google_credentials["private_key_id"],
+    # "private_key": google_credentials["private_key"].strip(),
+    "private_key": google_credentials["private_key"].replace('\\n', '\n'),
+    "client_email": google_credentials["client_email"],
+    "client_id": google_credentials["client_id"],
+    "auth_uri": google_credentials["auth_uri"],
+    "token_uri": google_credentials["token_uri"],
+    "auth_provider_x509_cert_url": google_credentials["auth_provider_x509_cert_url"],
+    "client_x509_cert_url": google_credentials["client_x509_cert_url"]
+}
+
+
+os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = json.dumps(credentials_dict)
+
+
+
 
 # OpenAI v1 client
 client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
